@@ -2,13 +2,13 @@ table, th, td {
   border: 1px solid black;
 }
 
-.table-div{
+.table-div {
   display: flex;
   justify-content: center;
 }
 
 .filter-by-name {
-  margin-bottom: 10px;
   display: flex;
   justify-content: center;
+  margin-bottom: 10px;
 }

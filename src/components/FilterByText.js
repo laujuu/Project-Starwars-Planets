@@ -9,7 +9,7 @@ function FilterByText() {
     <div className="filter-by-name">
       {/* {console.log('initial', filter} */}
       <label htmlFor="filterbytext">
-        Filter Text:
+        Filter:
         {' '}
         <input
           placeholder="Filter by Name"
