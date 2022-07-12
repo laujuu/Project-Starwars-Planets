@@ -1,5 +1,6 @@
 import React from 'react';
 import Provider from './context/myProvider';
+import FilterByText from './components/FilterByText';
 import PlanetsTable from './components/PlanetsTable';
 import './App.css';
 // import MyContext from './context/myContext';
@@ -10,6 +11,7 @@ function App() {
 
   return (
     <Provider>
+      <FilterByText />
       <PlanetsTable />
     </Provider>
   );
