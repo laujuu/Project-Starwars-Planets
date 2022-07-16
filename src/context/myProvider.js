@@ -2,16 +2,39 @@ import React, { useState, useEffect } from 'react';
 import propTypes from 'prop-types';
 import MyContext from './myContext';
 
-const INITIAL_STATE = {
-  filterByName: {
-    name: '',
-  },
-};
-
 function Provider({ children }) {
-  const [planetsData, setPlanetsData] = useState({});
+  const [planetsData, setPlanetsData] = useState([]);
+  const [filterByName, setFilterByName] = useState('');
+  const [column, setColumn] = useState('population');
+  const [comparison, setComparison] = useState('maior que');
+  const [value, setValue] = useState(0);
 
-  const [filter, setState] = useState(INITIAL_STATE);
+  // estado para verrificar se o botão é clicado, começa como falso (feito com ajuda do leite na mentoria)
+  const [filtrar, setFiltrar] = useState(false);
+
+  function handleFilters() {
+    // filtra pelo input do nome, em seguida filtra com os valores numericos
+    // logica criada com ajuda do saturnino na mentoria <3
+    const data = planetsData.planetsData.filter((planet) => planet.name.toLowerCase()
+      .includes(filterByName.toLowerCase()))
+      .filter((planet) => {
+        switch (comparison) {
+        case 'maior que':
+          return planet[column] * 1 > value;
+        case 'menor que':
+          return planet[column] * 1 < value;
+        case 'igual a':
+          return planet[column] === value;
+        default:
+          return true;
+        }
+      });
+    setPlanetsData({
+      planetsData: data,
+    });
+    // negação que altera o estado quando o botão é clicado (passa a ser true)
+    setFiltrar(!filtrar);
+  }
 
   useEffect(() => {
     const getStarWarsInfo = () => {
@@ -29,15 +52,20 @@ function Provider({ children }) {
     getStarWarsInfo();
   }, []);
 
-  const handleChange = ({ target: { value } }) => {
-    setState({ filterByName: {
-      name: value,
-    },
-    });
-  };
-
   return (
-    <MyContext.Provider value={ { ...planetsData, handleChange, filter } }>
+    <MyContext.Provider
+      value={ { ...planetsData,
+        filtrar,
+        filterByName,
+        setFilterByName,
+        handleFilters,
+        setPlanetsData,
+        setColumn,
+        setComparison,
+        setValue,
+        value,
+      } }
+    >
       {children}
     </MyContext.Provider>
   );

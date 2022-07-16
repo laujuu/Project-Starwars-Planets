@@ -3,11 +3,10 @@ import MyContext from '../context/myContext';
 import '../Table.css';
 
 function FilterByText() {
-  const { filter, handleChange } = useContext(MyContext);
+  const { filterByName, setFilterByName } = useContext(MyContext);
 
   return (
     <div className="filter-by-name">
-      {/* {console.log('initial', filter} */}
       <label htmlFor="filterbytext">
         Filter:
         {' '}
@@ -17,8 +16,8 @@ function FilterByText() {
           type="text"
           id="filterbytext"
           name="filterbytext"
-          value={ filter.name }
-          onChange={ handleChange }
+          value={ filterByName }
+          onChange={ (e) => setFilterByName(e.target.value) }
         />
       </label>
     </div>
