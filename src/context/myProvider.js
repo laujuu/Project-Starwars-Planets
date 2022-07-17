@@ -6,11 +6,20 @@ function Provider({ children }) {
   const [planetsData, setPlanetsData] = useState([]);
   const [filterByName, setFilterByName] = useState('');
   const [column, setColumn] = useState('population');
+  const [colOpt, setColOpt] = useState(['population',
+    'orbital_period', 'diameter', 'rotation_period', 'surface_water']);
   const [comparison, setComparison] = useState('maior que');
   const [value, setValue] = useState(0);
+  const [test, setTest] = useState([]);
 
   // estado para verrificar se o botão é clicado, começa como falso (feito com ajuda do leite na mentoria)
   const [filtrar, setFiltrar] = useState(false);
+
+  function renderColumns() {
+    return colOpt.map((col, i) => (
+      <option key={ i }>{ col }</option>
+    ));
+  }
 
   function handleFilters() {
     // filtra pelo input do nome, em seguida filtra com os valores numericos
@@ -32,6 +41,11 @@ function Provider({ children }) {
     setPlanetsData({
       planetsData: data,
     });
+    setColOpt(colOpt.filter((col) => (colOpt[0] !== col)));
+    if (value === '9000') {
+      setColOpt(['population',
+        'orbital_period', 'diameter', 'rotation_period', 'surface_water']);
+    }
     // negação que altera o estado quando o botão é clicado (passa a ser true)
     setFiltrar(!filtrar);
   }
@@ -64,6 +78,8 @@ function Provider({ children }) {
         setComparison,
         setValue,
         value,
+        renderColumns,
+        test,
       } }
     >
       {children}

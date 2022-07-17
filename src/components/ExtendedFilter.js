@@ -9,6 +9,8 @@ function ExtendedFilter() {
     setComparison,
     setValue,
     handleFilters,
+    renderColumns,
+    test,
   } = useContext(MyContext);
 
   return (
@@ -17,11 +19,7 @@ function ExtendedFilter() {
         onChange={ (e) => setColumn(e.target.value) }
         data-testid="column-filter"
       >
-        <option>population</option>
-        <option>orbital_period</option>
-        <option>diameter</option>
-        <option>rotation_period</option>
-        <option>surface_water</option>
+        { renderColumns() }
       </select>
       <select
         onChange={ (e) => setComparison(e.target.value) }
@@ -46,6 +44,11 @@ function ExtendedFilter() {
       >
         filtrar
       </button>
+      <div>
+        { test.map((e) => (
+          <p>{ e }</p>
+        )) }
+      </div>
     </div>
   );
 }
