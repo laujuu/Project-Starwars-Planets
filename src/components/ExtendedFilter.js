@@ -10,7 +10,6 @@ function ExtendedFilter() {
     setValue,
     handleFilters,
     renderColumns,
-    test,
   } = useContext(MyContext);
 
   return (
@@ -44,11 +43,6 @@ function ExtendedFilter() {
       >
         filtrar
       </button>
-      <div>
-        { test.map((e) => (
-          <p>{ e }</p>
-        )) }
-      </div>
     </div>
   );
 }

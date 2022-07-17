@@ -10,7 +10,6 @@ function Provider({ children }) {
     'orbital_period', 'diameter', 'rotation_period', 'surface_water']);
   const [comparison, setComparison] = useState('maior que');
   const [value, setValue] = useState(0);
-  const [test, setTest] = useState([]);
 
   // estado para verrificar se o botão é clicado, começa como falso (feito com ajuda do leite na mentoria)
   const [filtrar, setFiltrar] = useState(false);
@@ -79,7 +78,6 @@ function Provider({ children }) {
         setValue,
         value,
         renderColumns,
-        test,
       } }
     >
       {children}

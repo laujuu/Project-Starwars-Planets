@@ -11,7 +11,6 @@ function PlanetsTable() {
     filterByName,
     planetsData,
     filtrar,
-    column,
   } = useContext(MyContext);
 
   function planetsInfo() {
