@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
-import MyContext from '../context/myContext';
+import context from '../context/myContext';
 import '../Table.css';
 
 function FilterByText() {
-  const { filterByName, setFilterByName } = useContext(MyContext);
+  const { filterByName, setFilterByName } = useContext(context);
 
   return (
     <div className="filter-by-name">

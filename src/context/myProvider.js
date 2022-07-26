@@ -1,53 +1,94 @@
-import React, { useState, useEffect } from 'react';
-import propTypes from 'prop-types';
-import MyContext from './myContext';
+import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import context from './myContext';
 
 function Provider({ children }) {
   const [planetsData, setPlanetsData] = useState([]);
-  const [filterByName, setFilterByName] = useState('');
+  const [test, setNewTest] = useState([]);
   const [column, setColumn] = useState('population');
-  const [colOpt, setColOpt] = useState(['population',
-    'orbital_period', 'diameter', 'rotation_period', 'surface_water']);
   const [comparison, setComparison] = useState('maior que');
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState([0]);
+  const [filterAndDelete, setFilterAndDelete] = useState([]);
+  const [colOpt, setColOpt] = useState([
+    'population', 'orbital_period', 'diameter', 'rotation_period', 'surface_water']);
+  const [compOpt, setCompOpt] = useState(['maior que', 'menor que', 'igual a']);
+  // const [filtar, setFiltar] = useState(false);
 
-  // estado para verrificar se o botão é clicado, começa como falso (feito com ajuda do leite na mentoria)
-  const [filtrar, setFiltrar] = useState(false);
+  const [filterByName, setFilterByName] = useState('');
 
-  function renderColumns() {
-    return colOpt.map((col, i) => (
-      <option key={ i }>{ col }</option>
-    ));
-  }
+  useEffect(() => {
+    // filtra ao digitar o nome do planeta
+    const data = planetsData.filter((planet) => planet.name.includes(filterByName));
+    setNewTest(data);
+  }, [filterByName, planetsData]);
 
   function handleFilters() {
-    // filtra pelo input do nome, em seguida filtra com os valores numericos
-    // logica criada com ajuda do saturnino na mentoria <3
-    const data = planetsData.planetsData.filter((planet) => planet.name.toLowerCase()
-      .includes(filterByName.toLowerCase()))
-      .filter((planet) => {
-        switch (comparison) {
-        case 'maior que':
-          return planet[column] * 1 > value;
-        case 'menor que':
-          return planet[column] * 1 < value;
-        case 'igual a':
-          return planet[column] === value;
-        default:
-          return true;
-        }
-      });
-    setPlanetsData({
-      planetsData: data,
-    });
-    setColOpt(colOpt.filter((col) => (colOpt[0] !== col)));
-    if (value === '9000') {
-      setColOpt(['population',
-        'orbital_period', 'diameter', 'rotation_period', 'surface_water']);
-    }
+    // const data = planetsData.filter((planet) => planet.name.toLowerCase()
+    //   .includes(filterAndDelete));
+    // let data = [...planetsData];
+    // data = dataFiltered.filter((planet) => {
+    //   if (comparison === 'maior que') {
+    //     return Number(planet[column]) > Number(value);
+    //   }
+    //   if (comparison === 'menor que') {
+    //     return Number(planet[column]) < Number(value);
+    //   }
+    //   if (comparison === 'igual a') {
+    //     return Number(planet[column]) === Number(value);
+    //   }
+    //   return null;
+    // });
+    // setNewTest(data);
+
+    // remove coluna do select ao clicar em filtrar
+    const columnFiltered = colOpt.filter((col) => (col !== column));
+    setColOpt(columnFiltered);
+    setColumn(...columnFiltered);
+    // reseta o valor inicial para 0
+    setValue(0);
+    // adiciona o filtro na lista de filtro
+    setFilterAndDelete((prev) => [...prev, { column, comparison, value }]);
+
     // negação que altera o estado quando o botão é clicado (passa a ser true)
-    setFiltrar(!filtrar);
+    // setFiltrar(!filtrar);
   }
+
+  const removeFilter = ({ target }) => {
+    // remove o filtro quando ao clicar no botão 'X'
+    setFilterAndDelete(
+      filterAndDelete.filter((item) => item.column !== target.id),
+    );
+    // quando removido, a coluna volta novamente para a lista
+    setColOpt([...colOpt, target.id]);
+  };
+
+  const removeAll = () => {
+    // reseta lista de filtros aplicados
+    setFilterAndDelete([]);
+    // reseta a lista de colunas
+    setColOpt([
+      'population', 'orbital_period', 'diameter', 'rotation_period', 'surface_water']);
+  };
+
+  useEffect(() => {
+    let dataFiltered = [...planetsData];
+    filterAndDelete.forEach((filter) => {
+      if (filter.comparison === 'maior que') {
+        dataFiltered = dataFiltered
+          .filter((e) => Number(e[filter.column]) > Number(filter.value));
+        return;
+      }
+      if (filter.comparison === 'menor que') {
+        dataFiltered = dataFiltered
+          .filter((e) => Number(e[filter.column]) < Number(filter.value));
+        return;
+      }
+      if (filter.comparison === 'igual a') {
+        dataFiltered = dataFiltered.filter((e) => e[filter.column] === filter.value);
+      }
+    });
+    setNewTest(dataFiltered);
+  }, [filterAndDelete, planetsData]);
 
   useEffect(() => {
     const getStarWarsInfo = () => {
@@ -57,36 +98,43 @@ function Provider({ children }) {
           data.results.forEach((planets) => {
             delete planets.residents;
           });
-          setPlanetsData({
-            planetsData: data.results,
-          });
+          // filtra a pagina de acordo com ordem alfabetica
+          data.results.sort((a, b) => a.name.localeCompare(b.name));
+          setPlanetsData(data.results);
+          setNewTest(data.results);
         });
     };
     getStarWarsInfo();
   }, []);
 
   return (
-    <MyContext.Provider
-      value={ { ...planetsData,
-        filtrar,
-        filterByName,
+    <context.Provider
+      value={ { planetsData: test,
         setFilterByName,
+        filterByName,
         handleFilters,
-        setPlanetsData,
+        column,
         setColumn,
+        comparison,
         setComparison,
-        setValue,
         value,
-        renderColumns,
+        setValue,
+        filterAndDelete,
+        setColOpt,
+        colOpt,
+        compOpt,
+        setCompOpt,
+        setFilterAndDelete,
+        removeFilter,
+        removeAll,
+        setNewTest,
       } }
     >
-      {children}
-    </MyContext.Provider>
+      { children }
+    </context.Provider>
   );
 }
-
 Provider.propTypes = {
-  children: propTypes.node.isRequired,
+  children: PropTypes.node.isRequired,
 };
-
 export default Provider;

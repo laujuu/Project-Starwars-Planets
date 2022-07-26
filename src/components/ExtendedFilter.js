@@ -1,50 +1,94 @@
 import React, { useContext } from 'react';
-import MyContext from '../context/myContext';
+import context from '../context/myContext';
 import '../Table.css';
 
-function ExtendedFilter() {
+function Filters() {
   const {
-    value,
+    column,
     setColumn,
+    comparison,
     setComparison,
+    value,
     setValue,
+    filterAndDelete,
+    colOpt,
+    compOpt,
     handleFilters,
-    renderColumns,
-  } = useContext(MyContext);
+    removeFilter,
+    removeAll,
+  } = useContext(context);
 
   return (
-    <div className="filter-by-name">
-      <select
-        onChange={ (e) => setColumn(e.target.value) }
-        data-testid="column-filter"
-      >
-        { renderColumns() }
-      </select>
-      <select
-        onChange={ (e) => setComparison(e.target.value) }
-        data-testid="comparison-filter"
-      >
-        <option>maior que</option>
-        <option>menor que</option>
-        <option>igual a</option>
-      </select>
-      <input
-        value={ value }
-        onChange={ (e) => setValue(e.target.value) }
-        data-testid="value-filter"
-        type="text"
-      />
-      <button
-        data-testid="button-filter"
-        type="button"
-        onClick={ () => {
-          handleFilters();
-        } }
-      >
-        filtrar
-      </button>
+    <div>
+      <div className="filter-by-name">
+        <select
+          data-testid="column-filter"
+          value={ column }
+          onChange={ (e) => setColumn(e.target.value) }
+        >
+          {colOpt.map((col) => (
+            <option key={ col } value={ col }>{ col }</option>)) }
+        </select>
+
+        <select
+          data-testid="comparison-filter"
+          value={ comparison }
+          onChange={ (e) => setComparison(e.target.value) }
+        >
+          {compOpt.map((comp) => (
+            <option key={ comp } value={ comp }>{ comp }</option>
+          ))}
+        </select>
+        <input
+          data-testid="value-filter"
+          type="number"
+          value={ value }
+          onChange={ (e) => setValue(e.target.value) }
+        />
+        <button
+          data-testid="button-filter"
+          type="button"
+          onClick={ handleFilters }
+        >
+          filtrar
+        </button>
+        <button
+          data-testid="button-remove-filters"
+          type="button"
+          onClick={ () => removeAll() }
+        >
+          remover todas filtragens
+        </button>
+      </div>
+      <div className="addedFilter">
+        {
+          filterAndDelete.map((item) => (
+            <div
+              key={ item }
+              data-testid="filter"
+            >
+              <p>
+                {item.column}
+                ,
+                {' '}
+                {item.comparison}
+                ,
+                {' '}
+                {item.value}
+              </p>
+              <button
+                type="button"
+                data-testid="btnremvoe"
+                id={ item.column }
+                onClick={ (e) => removeFilter(e) }
+              >
+                X
+              </button>
+            </div>
+          ))
+        }
+      </div>
     </div>
   );
 }
-
-export default ExtendedFilter;
+export default Filters;

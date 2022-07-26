@@ -12,3 +12,8 @@ table, th, td {
   justify-content: center;
   margin-bottom: 10px;
 }
+
+.addedFilter {
+  display: flex;
+  justify-content: center;
+}
