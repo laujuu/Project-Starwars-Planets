@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import context from '../context/myContext';
 
 function SortFilter() {
+  const MINUS_ONE = -1;
   const { setNewTest, planetsData, colOpt } = useContext(context);
 
   //   function handleChange({ target }) {
@@ -17,25 +18,19 @@ function SortFilter() {
   // }
 
   const onClickOrder = () => {
+    let sortFilter = [...planetsData];
     if (order.sort === 'ASC') {
-      let sortFilter = [...planetsData];
-      const MINUS_ONE = -1;
       sortFilter = sortFilter.sort((a, b) => {
         if (a[order.column] === 'unknown') return 1;
         if (b[order.column] === 'unknown') return MINUS_ONE;
-        if ((a[order.column] - b[order.column]) <= 0) return MINUS_ONE;
-        return 1;
+        return ((a[order.column] - b[order.column]));
       });
       setNewTest(sortFilter);
-    }
-    if (order.sort === 'DESC') {
-      let sortFilter = [...planetsData];
-      const MINUS_ONE = -1;
+    } if (order.sort === 'DESC') {
       sortFilter = sortFilter.sort((a, b) => {
         if (a[order.column] === 'unknown') return 1;
         if (b[order.column] === 'unknown') return MINUS_ONE;
-        if ((a[order.column] - b[order.column]) <= 0) return 1;
-        return MINUS_ONE;
+        return ((b[order.column] - a[order.column]));
       });
       setNewTest(sortFilter);
     }
