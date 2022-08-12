@@ -69,6 +69,7 @@ function SortFilter() {
           />
         </label>
         <button
+          className="order-button"
           data-testid="column-sort-button"
           type="button"
           onClick={ () => onClickOrder() }

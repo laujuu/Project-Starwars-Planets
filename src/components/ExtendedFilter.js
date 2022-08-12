@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import context from '../context/myContext';
 import '../Table.css';
 
-function Filters() {
+function ExtendedFilter() {
   const {
     column,
     setColumn,
@@ -46,6 +46,7 @@ function Filters() {
           onChange={ (e) => setValue(e.target.value) }
         />
         <button
+          className="filter-button"
           data-testid="button-filter"
           type="button"
           onClick={ handleFilters }
@@ -53,6 +54,7 @@ function Filters() {
           filtrar
         </button>
         <button
+          className="del-all-filters"
           data-testid="button-remove-filters"
           type="button"
           onClick={ () => removeAll() }
@@ -64,25 +66,29 @@ function Filters() {
         {
           filterAndDelete.map((item) => (
             <div
+              className="filter-style"
               key={ item }
               data-testid="filter"
             >
-              <p>
-                {item.column}
-                ,
-                {' '}
-                {item.comparison}
-                ,
-                {' '}
-                {item.value}
-              </p>
+              <div className="filter-content">
+                <p>
+                  {item.column}
+                  ,
+                  {' '}
+                  {item.comparison}
+                  ,
+                  {' '}
+                  {item.value}
+                </p>
+              </div>
               <button
+                className="del-btn"
                 type="button"
                 data-testid="btnremvoe"
                 id={ item.column }
                 onClick={ (e) => removeFilter(e) }
               >
-                X
+                Deletar Filtro
               </button>
             </div>
           ))
@@ -91,4 +97,4 @@ function Filters() {
     </div>
   );
 }
-export default Filters;
+export default ExtendedFilter;
